@@ -5,7 +5,7 @@ import { Button, Card, Form, Input, Layout, Switch } from "antd";
 import { useCreation } from "ahooks";
 import { DefaultPageBloc } from "@pages/default/DefaultPageBloc";
 
-const { Header, Footer, Sider, Content } = Layout;
+const { Header, Sider, Content } = Layout;
 
 export function DefaultPage(props: {}): React.JSX.Element {
   const bloc = useCreation(() => new DefaultPageBloc(), []);
