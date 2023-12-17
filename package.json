@@ -40,7 +40,7 @@
     "build": "cross-env REACT_APP_ENVIRONMENT=development craco build",
     "test": "craco test",
     "eject": "craco eject",
-    "deploy": "gh-pages -d build"
+    "deploy": "yarn build && gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [

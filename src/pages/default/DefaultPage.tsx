@@ -37,12 +37,6 @@ export function DefaultPage(props: {}): React.JSX.Element {
           <Sider width={340} className={styles.sider}>
             <Card className={styles.card}>
               <Form labelCol={{ span: 8 }} layout="horizontal">
-                <Form.Item label="使用构造函数">
-                  <Switch
-                    value={bloc.state.value.options.optionalFields}
-                    onChange={e => bloc.handleOptionalFieldsChange(e)}
-                  />
-                </Form.Item>
                 <Form.Item label="可选字段">
                   <Switch
                     value={bloc.state.value.options.optionalFields}
@@ -54,6 +48,9 @@ export function DefaultPage(props: {}): React.JSX.Element {
                     value={bloc.state.value.options.sortAlphabetically}
                     onChange={e => bloc.handleSortAlphabeticallyChange(e)}
                   />
+                </Form.Item>
+                <Form.Item label="添加前缀">
+                  <Switch value={bloc.state.value.options.addPrefix} onChange={e => bloc.handleAddPrefixChange(e)} />
                 </Form.Item>
                 <Form.Item label="类名">
                   <Input

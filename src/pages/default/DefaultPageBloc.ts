@@ -12,6 +12,7 @@ export class DefaultPageState {
     sortAlphabetically: false,
     optionalFields: false,
     rootObjectName: "RootObject",
+    addPrefix: false,
   };
 
   copyWith(params: {
@@ -41,7 +42,6 @@ export class DefaultPageBloc {
   }
 
   transform() {
-    console.log("=======", JSON.stringify(this.state.value.options));
     const json2ts = new Json2Ts(this.state.value.options);
 
     this.state.value = this.state.value.copyWith({ errorMessage: "" });
@@ -62,6 +62,11 @@ export class DefaultPageBloc {
 
   handleSortAlphabeticallyChange(e: boolean) {
     this.state.value.options.sortAlphabetically = e;
+    this.state.value = this.state.value.copyWith({});
+  }
+
+  handleAddPrefixChange(e: boolean) {
+    this.state.value.options.addPrefix = e;
     this.state.value = this.state.value.copyWith({});
   }
 }

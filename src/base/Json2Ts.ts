@@ -6,6 +6,7 @@ interface IJson2TsConfigPrivate {
   sortAlphabetically: boolean;
   optionalFields: boolean;
   rootObjectName: string;
+  addPrefix: boolean;
 }
 
 export type IJson2TsConfig = Partial<IJson2TsConfigPrivate>;
@@ -24,6 +25,7 @@ export class Json2Ts {
       sortAlphabetically: false,
       optionalFields: false,
       rootObjectName: "RootObject",
+      addPrefix: false,
       ...config,
     };
   }
@@ -83,11 +85,26 @@ export class Json2Ts {
     if (obj === null) {
       return "any";
     }
+
+    if (Object.keys(obj).includes("@t")) {
+      // @ts-ignore
+      const items = (obj["@t"] ?? "").split(".");
+      if (items.length > 1) {
+        type = items[items.length - 1];
+      }
+    }
+
+    if (this.config.addPrefix) {
+      const prefix = this.config.addPrefix ? this.config.rootObjectName : "";
+      type = prefix + type;
+    }
+
     if (!this.interfaces[type]) {
       this.interfaces[type] = {};
     }
     const interfaceName = this.interfaces[type];
     Object.keys(obj).forEach(key => {
+      if (key == "@t") return;
       // @ts-ignore
       const value = obj[key];
       const fieldType = this.unknownToTS(value, key);
@@ -128,24 +145,6 @@ export class Json2Ts {
     return outout;
   }
 
-  private getType(type: string) {
-    if (type.includes("[]")) {
-      return "any[]";
-    }
-    switch (type) {
-      case "string":
-        return "string";
-      case "number":
-        return "number";
-      case "boolean":
-        return "boolean";
-      default:
-        return type;
-    }
-  }
-
-  private getTypeString(type: string) {}
-
   private getDefaultValue(type: string) {
     if (type.includes("[]")) return "[]";
     switch (type) {
@@ -155,6 +154,8 @@ export class Json2Ts {
         return `0`;
       case "boolean":
         return `false`;
+      case "any":
+        return `undefined`;
       default:
         return "new " + type + "()";
     }
