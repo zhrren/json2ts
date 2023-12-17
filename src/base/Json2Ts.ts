@@ -104,7 +104,7 @@ export class Json2Ts {
     }
     const interfaceName = this.interfaces[type];
     Object.keys(obj).forEach(key => {
-      if (key == "@t") return;
+      if (key === "@t") return;
       // @ts-ignore
       const value = obj[key];
       const fieldType = this.unknownToTS(value, key);
