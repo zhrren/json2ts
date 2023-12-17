@@ -2,7 +2,7 @@
   "name": "json2ts",
   "version": "1.0.0",
   "private": true,
-  "homepage": "https://zhrren.github.io/json2ts/build",
+  "homepage": "./",
   "dependencies": {
     "@preact/signals-react": "^1.2.2",
     "@sedan-utils/is-blank": "^1.0.0",
@@ -14,8 +14,10 @@
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
     "ahooks": "^3.7.8",
+    "antd": "^5.0.0",
     "class-transformer": "^0.5.1",
     "craco": "^0.0.3",
+    "js-cutil": "^1.0.0",
     "node-sass": "^9.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -23,12 +25,11 @@
     "react-scripts": "5.0.1",
     "reflect-metadata": "^0.1.13",
     "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4",
-    "antd": "^5.0.0",
-    "js-cutil": "^1.0.0"
+    "web-vitals": "^2.1.4"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
+    "gh-pages": "^6.1.0",
     "prettier": "2.8.8"
   },
   "scripts": {
@@ -38,7 +39,8 @@
     "start": "cross-env REACT_APP_ENVIRONMENT=development craco start --verbose",
     "build": "cross-env REACT_APP_ENVIRONMENT=development craco build",
     "test": "craco test",
-    "eject": "craco eject"
+    "eject": "craco eject",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
