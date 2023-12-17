@@ -1,0 +1,29 @@
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#layout {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+//antd组件内 ResizeObserver loop limit exceeded报错隐藏
+#webpack-dev-server-client-overlay {
+  display: none !important;
+}
+
+.ant-form-item-label {
+  padding-right: 10px!important;
+}
+.ant-form-item-label >label::after {
+  content: "" !important;
+}

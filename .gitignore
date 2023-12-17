@@ -1,0 +1,70 @@
+tmp
+**/*.log
+.git
+
+# Python cache
+**/__pycache__
+**/*.py[cod]
+**/*$py.class
+.pytest_cache/
+
+# React
+build/
+node_modules/
+
+
+# virtualenv
+.env/
+venv/
+
+# egg
+*.egg-info/
+eggs/
+.eggs/
+*.egg
+
+# pyenv
+.python-version
+
+# Jupyter Notebook
+**/.ipynb_checkpoints
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+**/.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# vim
+**/*.swp
+
+# MacOSX
+**/.DS_Store
+
+# nature-core
+nature-core/
+
+# Makefile
+.env
+.idea
+.vscode
+
+**/package-lock.json
+**/yarn.lock
+/snack/latest.version
+
+# uikit
+/imagica/uikit/dist
+/imagica/uikit/docs-dist
+/imagica/uikit/.dumi/tmp
+/imagica/uikit/.dumi/tmp-test
+/imagica/uikit/.dumi/tmp-production
+
+/imagica/corekit/dist
+/master/fot/imagica
+/.husky/pre-commit
