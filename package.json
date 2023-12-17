@@ -2,7 +2,7 @@
   "name": "json2ts",
   "version": "1.0.0",
   "private": true,
-  "homepage": ".",
+  "homepage": "https://zhrren.github.io/json2ts",
   "dependencies": {
     "@preact/signals-react": "^1.2.2",
     "@sedan-utils/is-blank": "^1.0.0",
