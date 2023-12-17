@@ -1,27 +1,19 @@
-name: Build and Deploy
-on: [push]
-
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
+name: GitHub Actions Build and Deploy Demo
+on:
+  push:
+    branches:
+      - develop
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@master
 
-      - name: Install and Build
-        run: |
-          npm install
-          npm run deploy
-
-      - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@releases/v3
-        with:
+      - name: Build and Deploy
+        uses: JamesIves/github-pages-deploy-action@master
+        env:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           BRANCH: gh-pages
           FOLDER: build
+          BUILD_SCRIPT: npm install && npm run build
