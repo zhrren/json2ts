@@ -94,7 +94,7 @@ export class Json2Ts {
       }
     }
 
-    if (this.config.addPrefix) {
+    if (this.config.addPrefix && this.config.rootObjectName !== type) {
       const prefix = this.config.addPrefix ? this.config.rootObjectName : "";
       type = prefix + type;
     }
