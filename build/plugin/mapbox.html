@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Center the map on a clicked feature</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+
+    <script src="https://dopniceu5am9m.cloudfront.net/static/libs/react-18.2.0.min.js"></script>
+    <script src="https://dopniceu5am9m.cloudfront.net/static/libs/react-dom-18.2.0.min.js"></script>
+    <script src="https://dopniceu5am9m.cloudfront.net/static/libs/babel-7.22.6.min.js"></script>
+    <script src="https://dopniceu5am9m.cloudfront.net/static/libs/use-iframe-1.0.4.js"></script>
+
+
+    <style>
+      body {
+        margin: 0;
+      }
+
+      #map {
+        width: 100%;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+      }
+
+      /*隐藏地图logo和不需要的选项按钮*/
+      .mapboxgl-control-container {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <div id="map"></div>
+    <script type="text/babel">
+      class MapboxViewState {
+        pageHeight = 100;
+        addresses = [{ lng: -115.1765067, lat: 36.1129455, name: "" }];
+        theme = "LIGHT"
+        copyWith(params) {
+          const state = new MapboxViewState();
+          state.pageHeight = params.pageHeight || this.pageHeight;
+          state.addresses = params.addresses || this.addresses;
+          state.theme = params.theme || this.theme;
+          return state;
+        }
+      }
+
+      function App() {
+        const [iframeState, iframeStateUpdate] = useIframeSharedState(new MapboxViewState());
+        const mapRef = React.useRef(null);
+
+        const handler = React.useCallback(message => {
+          console.log("message", JSON.stringify(message));
+
+          switch (message.type) {
+            case "zoomIn":
+              mapRef.current?.zoomIn({duration: 1000}); break;
+            case "zoomOut":
+              mapRef.current?.zoomOut({duration: 1000}); break;
+          }
+        }, []);
+
+        const [dispatch] = useIframe(handler);
+        const defaultCenter = [-115.1765067, 36.1129455];
+
+        React.useEffect(() => {
+          // 触发 iframeState 初始化
+          console.log("iframeState", iframeState);
+
+          function calcPageHeight(doc) {
+            const cHeight = Math.max(doc.body.clientHeight, doc.documentElement.clientHeight);
+            const sHeight = Math.max(doc.body.scrollHeight, doc.documentElement.scrollHeight);
+            const height = Math.max(cHeight, sHeight);
+            return height + 10;
+          }
+
+          const onLoad = () => {
+            const bodyHeight = calcPageHeight(document);
+            // console.log("document.body.offsetHeight", bodyHeight);
+
+            // mapbox 不需要动态高度
+            // const state = iframeState.copyWith({pageHeight: bodyHeight})
+            // iframeStateUpdate(state)
+            dispatch({ type: "pageLoaded" });
+          };
+          window.addEventListener("load", onLoad);
+          return () => {
+            window.removeEventListener("load", onLoad);
+          };
+        }, []);
+
+        function addContent() {
+          const mapView = mapRef.current;
+          const addresses = iframeState.addresses;
+          if (!addresses || !addresses.length) {
+            return;
+          }
+
+          const firstAddr = addresses[0];
+          if (
+            addresses.length === 1 &&
+            firstAddr.lng === defaultCenter[0] &&
+            firstAddr.lat === defaultCenter[1]
+          ) {
+            return;
+          }
+
+          const pointsId = "points";
+          const imageId = "location-icon";
+
+          //removeContent
+          if (mapView.getLayer(pointsId)) {
+            mapView.removeLayer(pointsId);
+          }
+          if (mapView.getSource(pointsId)) {
+            mapView.removeSource(pointsId);
+          }
+
+          if (!mapView.hasImage(imageId)) {
+            mapView.loadImage(
+              "https://dopniceu5am9m.cloudfront.net/static/assets/230705/map_marker.png",
+              (error, image) => {
+                if (error) {
+                  console.log(`加载map地址图标出错：${error}`);
+                  throw error;
+                }
+
+                if (!mapView.hasImage(imageId)) {
+                  mapView.addImage(imageId, image);
+                }
+              }
+            );
+          }
+
+          mapView.addSource(pointsId, {
+            type: "geojson",
+            data: {
+              type: "FeatureCollection",
+              features: addresses.map(address => {
+                return {
+                  type: "Feature",
+                  geometry: {
+                    type: "Point",
+                    coordinates: [address.lng, address.lat],
+                  },
+                  properties: {
+                    title: address.name,
+                  },
+                };
+              }),
+            },
+          });
+
+          const layer = {
+            id: pointsId,
+            type: "symbol",
+            source: pointsId,
+            layout: {
+              "icon-image": imageId,
+              "icon-size": 0.5,
+              "text-field": ["get", "title"],
+              "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+              "text-offset": [0, 1.25],
+              "text-anchor": "top",
+            }
+          }
+
+          if (iframeState.theme.toLowerCase() === "dark") {
+            layer["paint"] = {
+              "text-color": "#fff",
+            }
+          }
+
+          mapView.addLayer(layer);
+
+          if (addresses.length > 1) {
+            const coordinatesList = addresses.map(address => [address.lng, address.lat]);
+
+            const bounds = new mapboxgl.LngLatBounds(coordinatesList[0], coordinatesList[0]);
+            for (const coord of coordinatesList) {
+              bounds.extend(coord);
+            }
+            mapView.fitBounds(bounds, { padding: 30 });
+          } else {
+            mapView.flyTo({center:[firstAddr.lng,firstAddr.lat]});
+          }
+        }
+
+        React.useEffect(() => {
+          if (!mapRef.current) {
+            mapboxgl.accessToken =
+              "pk.eyJ1IjoiemhycmVuIiwiYSI6ImNqZmNpYW80NjIweWQzM216d2R5YnRrMnAifQ.NrFQhodO9IQFGIMkROeykg";
+            mapRef.current = new mapboxgl.Map({
+              container: "map",
+              style: `mapbox://styles/mapbox/${iframeState.theme.toLowerCase()}-v9`,
+              center: defaultCenter,
+              zoom: 12,
+            });
+          } else {
+           addContent()
+          }
+          mapRef.current.on("load", () => addContent());
+        }, [iframeState.addresses]);
+
+        React.useEffect(() => {
+          const mapView = mapRef.current;
+          if (mapView) {
+            mapView.setStyle(`mapbox://styles/mapbox/${iframeState.theme.toLowerCase()}-v9`);
+            mapView.on("style.load", () => addContent());
+          }
+
+        },[iframeState.theme])
+
+        return <></>;
+      }
+
+      ReactDOM.render(<App />, document.getElementById("root"));
+    </script>
+  </body>
+</html>

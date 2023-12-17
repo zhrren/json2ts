@@ -9,7 +9,7 @@ tmp
 .pytest_cache/
 
 # React
-build/
+#build/
 node_modules/
 
 
@@ -56,15 +56,5 @@ nature-core/
 
 **/package-lock.json
 **/yarn.lock
-/snack/latest.version
 
-# uikit
-/imagica/uikit/dist
-/imagica/uikit/docs-dist
-/imagica/uikit/.dumi/tmp
-/imagica/uikit/.dumi/tmp-test
-/imagica/uikit/.dumi/tmp-production
-
-/imagica/corekit/dist
-/master/fot/imagica
 /.husky/pre-commit
