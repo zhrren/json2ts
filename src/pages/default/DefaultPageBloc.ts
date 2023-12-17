@@ -41,7 +41,7 @@ export class DefaultPageBloc {
   }
 
   transform() {
-    console.log("=======", JSON.stringify(this.state.value.options))
+    console.log("=======", JSON.stringify(this.state.value.options));
     const json2ts = new Json2Ts(this.state.value.options);
 
     this.state.value = this.state.value.copyWith({ errorMessage: "" });

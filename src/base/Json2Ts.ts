@@ -72,9 +72,11 @@ export class Json2Ts {
   }
 
   private capitalizeFirst(str: string) {
-    return str.replace(/_([a-z])/g, (match, p1) => {
-      return p1.toUpperCase();
-    }).replace(/\b\w+/g, (word) => word.charAt(0).toUpperCase() + word.slice(1));
+    return str
+      .replace(/_([a-z])/g, (match, p1) => {
+        return p1.toUpperCase();
+      })
+      .replace(/\b\w+/g, word => word.charAt(0).toUpperCase() + word.slice(1));
   }
 
   private objectToTS(obj: {}, type: string = this.config.rootObjectName) {
@@ -97,7 +99,7 @@ export class Json2Ts {
   }
 
   private interfacesToString() {
-    const {sortAlphabetically, optionalFields} = this.config;
+    const { sortAlphabetically, optionalFields } = this.config;
     let outout = Object.keys(this.interfaces)
       .map(name => {
         const interfaceStr = [`export class ${name} {`];
@@ -109,8 +111,8 @@ export class Json2Ts {
           const type = this.interfaces[name][field];
           const defaultValue = optionalFields ? "" : " = " + this.getDefaultValue(type);
 
-          const customType = type.replace("[]", "")
-          const customTypeCheck = Object.keys(this.interfaces).includes(customType)
+          const customType = type.replace("[]", "");
+          const customTypeCheck = Object.keys(this.interfaces).includes(customType);
           if (customTypeCheck) {
             interfaceStr.push(`  @Type(() => ${customType})`);
           }
@@ -122,7 +124,7 @@ export class Json2Ts {
       })
       .join("\n");
 
-    if (outout.includes("@Type")) outout = "import { Type } from \"class-transformer\";\n\n" + outout;
+    if (outout.includes("@Type")) outout = 'import { Type } from "class-transformer";\n\n' + outout;
     return outout;
   }
 
@@ -142,11 +144,10 @@ export class Json2Ts {
     }
   }
 
-  private getTypeString(type: string) {
-  }
+  private getTypeString(type: string) {}
 
   private getDefaultValue(type: string) {
-    if (type.includes("[]")) return "[]"
+    if (type.includes("[]")) return "[]";
     switch (type) {
       case "string":
         return `""`;

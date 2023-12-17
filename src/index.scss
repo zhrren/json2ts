@@ -22,8 +22,9 @@ code {
 }
 
 .ant-form-item-label {
-  padding-right: 10px!important;
+  padding-right: 10px !important;
 }
-.ant-form-item-label >label::after {
+
+.ant-form-item-label > label::after {
   content: "" !important;
 }

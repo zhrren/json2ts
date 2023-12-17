@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./DefaultPage.module.scss";
 import TextArea from "antd/lib/input/TextArea";
-import {Button, Card, Divider, Flex, Form, Input, Layout, Radio, Space, Switch} from "antd";
+import { Button, Card, Form, Input, Layout, Switch } from "antd";
 import { useCreation } from "ahooks";
 import { DefaultPageBloc } from "@pages/default/DefaultPageBloc";
 
@@ -36,26 +36,23 @@ export function DefaultPage(props: {}): React.JSX.Element {
           <Sider width={20} className={styles.siderSpace}></Sider>
           <Sider width={340} className={styles.sider}>
             <Card className={styles.card}>
-              <Form
-                labelCol={{ span: 8 }}
-                layout="horizontal"
-              >
+              <Form labelCol={{ span: 8 }} layout="horizontal">
                 <Form.Item label="使用构造函数">
                   <Switch
                     value={bloc.state.value.options.optionalFields}
-                    onChange={(e=> bloc.handleOptionalFieldsChange(e))}
+                    onChange={e => bloc.handleOptionalFieldsChange(e)}
                   />
                 </Form.Item>
                 <Form.Item label="可选字段">
                   <Switch
                     value={bloc.state.value.options.optionalFields}
-                    onChange={(e=> bloc.handleOptionalFieldsChange(e))}
+                    onChange={e => bloc.handleOptionalFieldsChange(e)}
                   />
                 </Form.Item>
                 <Form.Item label="按字母排序">
                   <Switch
                     value={bloc.state.value.options.sortAlphabetically}
-                    onChange={(e=> bloc.handleSortAlphabeticallyChange(e))}
+                    onChange={e => bloc.handleSortAlphabeticallyChange(e)}
                   />
                 </Form.Item>
                 <Form.Item label="类名">
