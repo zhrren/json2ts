@@ -95,7 +95,7 @@ export class Json2Ts {
     }
 
     if (this.config.addPrefix && this.config.rootObjectName !== type) {
-      const prefix = this.config.addPrefix ? this.config.rootObjectName : "";
+      const prefix = this.config.addPrefix ? this.capitalizeFirst(this.config.rootObjectName) : "";
       type = prefix + type;
     }
 
@@ -119,7 +119,7 @@ export class Json2Ts {
     const { sortAlphabetically, optionalFields } = this.config;
     let outout = Object.keys(this.interfaces)
       .map(name => {
-        const interfaceStr = [`export class ${name} {`];
+        const interfaceStr = [`export class ${this.capitalizeFirst(name)} {`];
         const fields = Object.keys(this.interfaces[name]);
         if (sortAlphabetically) {
           fields.sort();
