@@ -115,6 +115,16 @@ export class Json2Ts {
     return type;
   }
 
+  private hasSpaceInMiddle(str: string): boolean {
+    const spaceIndex = str.indexOf(" ");
+
+    if (spaceIndex !== -1 && spaceIndex > 0 && spaceIndex < str.length - 1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   private interfacesToString() {
     const { sortAlphabetically, optionalFields } = this.config;
     let outout = Object.keys(this.interfaces)
@@ -133,8 +143,8 @@ export class Json2Ts {
           if (customTypeCheck) {
             interfaceStr.push(`  @Type(() => ${customType})`);
           }
-
-          interfaceStr.push(`  ${field}${optionalFields ? "?" : ""}: ${type}${defaultValue};`);
+          const rewriteFiled = this.hasSpaceInMiddle(field) ? `"${field}"` : field;
+          interfaceStr.push(`  ${rewriteFiled}${optionalFields ? "?" : ""}: ${type}${defaultValue};`);
         });
         interfaceStr.push("}\n");
         return interfaceStr.join("\n");
